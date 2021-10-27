@@ -4,16 +4,17 @@ import java.nio.file.Paths;
 import java.util.Scanner;
 
 public class Table {
-	private static String tableName;
-	private static boolean table_state = false;
-    private static SQL_QUERY command = new SQL_QUERY();
+	private String defaults = "Database_Defaults";
+	private String tableName;
+	private boolean table_state = false;
+    private SQL_QUERY command = new SQL_QUERY();
 	private static Scanner scan;
     public Table(String name) {
     	tableName = name;
     	check_n_initialize();
     }
 	//String name, int cal , int pro , int carb , int fat
-    public static void addFood (){
+    public void addFood (){
         scan = new Scanner(System.in);
         System.out.println("What is the name of your food?");
         String name = scan.nextLine();
@@ -28,8 +29,10 @@ public class Table {
         scan.nextLine();
         
         //Creating SQL string to add to table
-        String sql = "INSERT INTO FOOD_DATA (Name , Calories , Protein , Carbs , Fat) "
-                   + "VALUES ('" + name + "', " + cal + ", " + pro + ", " + carb + ", " + fat + " );";
+        String sql = "INSERT INTO " 
+        			+ tableName
+        			+" (Name , Calories , Protein , Carbs , Fat) "
+        			+ "VALUES ('" + name + "', " + cal + ", " + pro + ", " + carb + ", " + fat + " );";
         //Usr rechecks values
         System.out.println("Does this look correct?");
         System.out.println(name);
@@ -52,22 +55,42 @@ public class Table {
         command.Query(sql);
         System.out.println(name + " Successfully added.");  
     }
-    public static void search_for_food() {
-        scan = new Scanner(System.in);
-        System.out.println("Type in search: ");
-        String input = scan.nextLine();
-		FOOD_DATA[] test_search = FOOD_DATA.searching(input);
-        System.out.println("Here is your search results: ");
-		for(int i =0; i < test_search.length; i++) {
-			System.out.println(test_search[i]);
-		}
+    public void addNew_Food(int ID) {
+    	String[] columns_name = getArrayCollumns();
+        String sql = "INSERT INTO " 
+    			+ tableName
+    			+" (";
+        		for(int i = 0; i < columns_name.length-1; i++) {
+        			sql +="\""+ columns_name[i] + "\"" + ", ";
+        		}
+        	   sql += "\"" + columns_name[columns_name.length-1] + "\"";
+    		   sql +=") "
+				+ "VALUES ( "
+				+ ID
+				+ ", " + "\"\"" 
+				+ ", " + "\"\"";
+			   for(int i = 0; i < columns_name.length-3; i++) {
+				   sql += ", " + 0;
+			   }
+    		   sql += " );";
+        command.Query(sql);
     }
-    public static void check_n_initialize() {
+    public String[] getArrayCollumns() {
+		try {
+			return  Files.lines(Paths.get(defaults + "\\column_name.txt"))
+					.map(l -> l).toArray(String[]::new);
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		return null;
+    }
+    public void check_n_initialize() {
     	if(table_state == false) {
     		create_table();
     	}
     }
-    private static void create_table() {
+    private void create_table() {
     	if(!command.tableExists(tableName)) {
     		String sql = "CREATE TABLE "
 					+ "\"" + tableName + "\"" 
@@ -90,7 +113,7 @@ public class Table {
     				+ "	\"Carotene, alpha (mcg)\"	FLOAT,\r\n"
     				+ "	\"Carotene, beta (mcg)\"	FLOAT,\r\n"
     				+ "	\"Cryptoxanthin, beta (mcg)\"	FLOAT,\r\n"
-    				+ "	\"Lycopene (mcg)	\"	FLOAT,\r\n"
+    				+ "	\"Lycopene (mcg)\"	FLOAT,\r\n"
     				+ "	\"Lutein + zeaxanthin (mcg)\"	FLOAT,\r\n"
     				+ "	\"Thiamin (mg)\"	FLOAT,\r\n"
     				+ "	\"Riboflavin (mg)\"	FLOAT,\r\n"
@@ -123,14 +146,17 @@ public class Table {
     				+ "	\"Water (g)\"	FLOAT,\r\n"
     				+ "	PRIMARY KEY(\"ID\")\r\n"
     				+ ");" ;
-    		command.Query(sql);
-    		for(int i = 1; i <= 4; i++) {
-    			try {
-    				sql = new String (Files.readAllBytes(Paths.get("src\\food"+i+".txt")));
-    				command.Query(sql);
-    			} catch (IOException e) {
-    				// TODO Auto-generated catch block
-    				e.printStackTrace();
+			command.Query(sql);
+    		close();
+    		if(tableName.equals("FOOD_DATA")) {
+    			for(int i = 1; i <= 4; i++) {
+    				try {
+    					sql = new String (Files.readAllBytes(Paths.get(defaults + "\\food"+i+".txt")));
+    					command.Query(sql);
+    				} catch (IOException e) {
+    					// TODO Auto-generated catch block
+    					e.printStackTrace();
+    				}
     			}
     		}
     	}
@@ -140,10 +166,31 @@ public class Table {
 		command.Query("UPDATE "
 						+ "\"" + tableName + "\"" 
 						+ " SET " 
-						+ column_name + " = "
-						+ value +
-						" WHERE ID = " + iD +";");
+						+ "\"" 
+						+ column_name
+						+ "\""
+						+ " = "
+						+ "\"" 
+						+ value
+						+ "\""
+						+ " WHERE ID = " + iD +";");
 	}
+    public void search_for_food() {
+        scan = new Scanner(System.in);
+        System.out.println("Type in search: ");
+        String input = scan.nextLine();
+        Food[] test_search = new Food[0];
+		if(tableName.equals("FOOD_DATA"))test_search = FOOD_DATA.searching(input);
+		if(tableName.equals("MEAL_DATA"))test_search = MEAL_DATA.searching(input);
+        System.out.println("Here is your search results: ");
+		for(int i =0; i < test_search.length; i++) {
+			System.out.println(test_search[i]);
+		}
+    }
+    public void close()
+    {
+        command.SQL_close();
+    }
 }
 
     

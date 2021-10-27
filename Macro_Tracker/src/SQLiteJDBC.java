@@ -1,7 +1,8 @@
 import java.util.Scanner;
 
 public class SQLiteJDBC {
-  private static Scanner input;
+private static Scanner input;
+private static Table table;
 public static void main( String args[] ) {
 	  user_prompt();
   }
@@ -49,13 +50,13 @@ public static void main( String args[] ) {
 						break;
 					case "E":
 					case "e":
-						Table.addFood();
+						addFood();
 						// add food into the FOOD_DATA table in the database.
 						valid = true;
 						break;
 					case "S":
 					case "s":
-						Table.search_for_food();
+						searchFood();
 						// Search for food items by user's input. 
 						valid = true;
 						break;
@@ -83,7 +84,55 @@ public static void main( String args[] ) {
 						valid = false;
 				}
 			}while(valid == false);
-	        
 		}
+        table.close();
   	}
+  public static void addFood() {
+	  boolean valid = false;
+	  do{
+		  System.out.println("Please enter the name of the table you want to add to:");
+		  String tableName = (input.nextLine()).toUpperCase();
+		  switch(tableName){
+				case "FOOD_DATA":
+				case "FOOD":
+					table = new Table("FOOD_DATA");
+					table.addFood();
+					valid = true;
+					break;
+				case "MEAL_DATA":
+				case "MEAL":
+					table = new Table("MEAL_DATA");
+					table.addFood();
+					valid = true;
+					break;
+				default:
+					System.out.println("That table don't exist. Please try again.");	
+					valid = false;
+			}
+	}while(valid == false);  
+  }
+  public static void searchFood() {
+	  boolean valid = false;
+	  do{
+		  System.out.println("Please enter the name of the table you want to search in:");
+		  String tableName = (input.nextLine()).toUpperCase();
+		  switch(tableName){
+				case "FOOD_DATA":
+				case "FOOD":
+					table = new Table("FOOD_DATA");
+					table.search_for_food();
+					valid = true;
+					break;
+				case "MEAL_DATA":
+				case "MEAL":
+					table = new Table("MEAL_DATA");
+					table.search_for_food();
+					valid = true;
+					break;
+				default:
+					System.out.println("That table don't exist. Please try again.");	
+					valid = false;
+			}
+	}while(valid == false);  
+  }
 }

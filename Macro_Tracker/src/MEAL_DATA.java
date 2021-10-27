@@ -1,30 +1,29 @@
-public class FOOD_DATA extends Food{
-	private static String TABLE_NAME = "FOOD_DATA";
+public class MEAL_DATA extends Food{
+	private static String TABLE_NAME = "MEAL_DATA";
 	private int ID;
-	public FOOD_DATA() {
+	public MEAL_DATA() {
 		super(TABLE_NAME);
 	}
-	public FOOD_DATA(int ID) {
+	public MEAL_DATA(int ID) {
 		super(TABLE_NAME, ID);
 	}
-	public FOOD_DATA(Food new_food) {
+	public MEAL_DATA(Food new_food) {
 		super(new_food);
 	}
-	public static FOOD_DATA typeToFOOD_DATA(Food food) {
-		FOOD_DATA result = new FOOD_DATA(food);
+	public static MEAL_DATA typeToMEAL_DATA(Food food) {
+		MEAL_DATA result = new MEAL_DATA(food);
 		return result;
 	}
-	public static FOOD_DATA[] typeToFOOD_DATA(Food[] food) {
-		FOOD_DATA[] result = new FOOD_DATA[food.length];
+	public static MEAL_DATA[] typeToMEAL_DATA(Food[] food) {
+		MEAL_DATA[] result = new MEAL_DATA[food.length];
 		for (int i =0; i < food.length; i++) {
-			result[i] = FOOD_DATA.typeToFOOD_DATA(food[i]);
+			result[i] = MEAL_DATA.typeToMEAL_DATA(food[i]);
 		}
 		return result;
 	}
-	public static FOOD_DATA[] searching(String value_o_row) {
-		return typeToFOOD_DATA(Food.searching(TABLE_NAME, value_o_row));
+	public static MEAL_DATA[] searching(String value_o_row) {
+		return typeToMEAL_DATA(Food.searching(TABLE_NAME, value_o_row));
 	}
-
     public String toString() {
         return "\n"
         		+ "***************************"  + "\n"
