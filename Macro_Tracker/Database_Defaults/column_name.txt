@@ -8,8 +8,8 @@ Sugars
 Fiber
 Fat
 Fatty acids, saturated
-Fatty acids, monounsaturated 
-Fatty acids, polyunsaturated 
+Fatty acids, monounsaturated
+Fatty acids, polyunsaturated
 Cholesterol (mg)
 Retinol (mcg)
 Vitamin A, RAE (mcg_RAE)

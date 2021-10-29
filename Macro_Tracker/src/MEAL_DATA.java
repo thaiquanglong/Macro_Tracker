@@ -24,19 +24,5 @@ public class MEAL_DATA extends Food{
 	public static MEAL_DATA[] searching(String value_o_row) {
 		return typeToMEAL_DATA(Food.searching(TABLE_NAME, value_o_row));
 	}
-    public String toString() {
-        return "\n"
-        		+ "***************************"  + "\n"
-        		+"ID: "+ getID() + "\n"
-        		+"Name: "+ getName() + "\n"
-        		+"Calories: "+ getCalories() + "\n"	
-        		+"Protein: "+ getProtein() + "\n"	
-        		+"Carbs: "+ getCarbs() + "\n"
-        		+"Sugars: "+ getSugars() + "\n"
-        		+"Fiber: "+ getFiber() + "\n"
-        		+"Fat: " + getFat()  + "\n"
-        		+"***************************"  + "\n"
-        		;
-    }
 
 }
